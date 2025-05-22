@@ -114,7 +114,9 @@ const Webcam: React.FC<WebcamProps> = ({
     
     let animationFrameId: number;
     let lastCaptureTime = 0;
-    const captureInterval = 200; // Detect gestures every 200ms
+    const captureInterval = 150; // Detect gestures more frequently (was 200ms)
+    const gestureConfirmationThreshold = 3; // Number of consistent detections to confirm a gesture
+    const gestureHistory: string[] = [];
     
     const detectHands = async (timestamp: number) => {
       if (!videoRef.current || !canvasRef.current || !handposeModel || !cameraReady) return;
@@ -132,13 +134,28 @@ const Webcam: React.FC<WebcamProps> = ({
           
           if (gesture) {
             console.log('Detected gesture:', gesture);
-            setCurrentGesture(gesture);
             
-            // Notify parent component about the detected gesture if we're in capturing mode
-            if (isCapturing && !isCountingDown) {
-              onGestureDetected(gesture as Choice);
+            // Add to gesture history
+            gestureHistory.push(gesture);
+            if (gestureHistory.length > gestureConfirmationThreshold) {
+              gestureHistory.shift(); // Keep history at fixed size
             }
-          } else {
+            
+            // Check if we have consistent detections
+            const mostFrequentGesture = getMostFrequentGesture(gestureHistory);
+            if (mostFrequentGesture) {
+              setCurrentGesture(mostFrequentGesture);
+              
+              // Notify parent component about the detected gesture if we're in capturing mode
+              if (isCapturing && !isCountingDown && 
+                  gestureHistory.filter(g => g === mostFrequentGesture).length >= 2) {
+                onGestureDetected(mostFrequentGesture as Choice);
+              }
+            }
+          } else if (gestureHistory.length > 0) {
+            // Clear history when no gesture is detected
+            gestureHistory.length = 0;
+            
             // Don't clear current gesture immediately to avoid flickering
             if (timestamp - lastCaptureTime > 1000) {
               setCurrentGesture(null);
@@ -170,6 +187,18 @@ const Webcam: React.FC<WebcamProps> = ({
       }
     };
   }, [isActive, handposeModel, isCapturing, isCountingDown, onGestureDetected, cameraReady]);
+
+  // Helper function to get the most frequent gesture from history
+  const getMostFrequentGesture = (history: string[]): string | null => {
+    if (history.length === 0) return null;
+    
+    const counts = history.reduce((acc, gesture) => {
+      acc[gesture] = (acc[gesture] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+  };
 
   return (
     <div className="relative w-full max-w-lg mx-auto mb-4">

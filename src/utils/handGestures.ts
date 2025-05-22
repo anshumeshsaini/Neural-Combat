@@ -1,3 +1,4 @@
+
 import * as tf from '@tensorflow/tfjs';
 import * as handpose from '@tensorflow-models/handpose';
 import * as fp from 'fingerpose';
@@ -8,36 +9,47 @@ const paperGesture = new fp.GestureDescription('paper');
 const scissorsGesture = new fp.GestureDescription('scissors');
 
 // Rock gesture - all fingers curled in
-rockGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.HalfCurl, 0.5);
-rockGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.FullCurl, 0.5);
+// Make rock detection more accurate by requiring full curl of all fingers
+rockGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.HalfCurl, 1.0);
+rockGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.FullCurl, 1.0);
 
 rockGesture.addCurl(fp.Finger.Index, fp.FingerCurl.FullCurl, 1.0);
 rockGesture.addCurl(fp.Finger.Middle, fp.FingerCurl.FullCurl, 1.0);
 rockGesture.addCurl(fp.Finger.Ring, fp.FingerCurl.FullCurl, 1.0);
 rockGesture.addCurl(fp.Finger.Pinky, fp.FingerCurl.FullCurl, 1.0);
 
+// Add direction constraints to help with rock detection
+rockGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.DiagonalUpLeft, 0.5);
+rockGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.DiagonalUpRight, 0.5);
+
 // Paper gesture - all fingers extended
 paperGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.NoCurl, 1.0);
-
 paperGesture.addCurl(fp.Finger.Index, fp.FingerCurl.NoCurl, 1.0);
 paperGesture.addCurl(fp.Finger.Middle, fp.FingerCurl.NoCurl, 1.0);
 paperGesture.addCurl(fp.Finger.Ring, fp.FingerCurl.NoCurl, 1.0);
 paperGesture.addCurl(fp.Finger.Pinky, fp.FingerCurl.NoCurl, 1.0);
 
+// Add direction constraint to ensure palm facing camera
+paperGesture.addDirection(fp.Finger.Middle, fp.FingerDirection.VerticalUp, 0.7);
+
 // Scissors gesture - index and middle extended, rest curled
+// Improve scissors detection with more specific finger positions
 scissorsGesture.addCurl(fp.Finger.Index, fp.FingerCurl.NoCurl, 1.0);
 scissorsGesture.addCurl(fp.Finger.Middle, fp.FingerCurl.NoCurl, 1.0);
 
+// Thumb can be half curled or no curl for scissors
+scissorsGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.HalfCurl, 0.5);
+scissorsGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.NoCurl, 0.5);
+
+// Ring and pinky must be fully curled for scissors
 scissorsGesture.addCurl(fp.Finger.Ring, fp.FingerCurl.FullCurl, 1.0);
 scissorsGesture.addCurl(fp.Finger.Pinky, fp.FingerCurl.FullCurl, 1.0);
 
-// A little extra direction requirement for scissors
+// Strong direction requirements for scissors
 scissorsGesture.addDirection(fp.Finger.Index, fp.FingerDirection.VerticalUp, 0.7);
 scissorsGesture.addDirection(fp.Finger.Middle, fp.FingerDirection.VerticalUp, 0.7);
 
-// Remove the problematic addAngle line that's causing the error
-
-// Initialize the gesture estimator
+// Initialize the gesture estimator with improved confidence threshold
 export const gestureEstimator = new fp.GestureEstimator([
   rockGesture,
   paperGesture,
@@ -70,7 +82,7 @@ export const loadHandPoseModel = async () => {
   }
 };
 
-// Detect and analyze hand gestures
+// Detect and analyze hand gestures with improved detection parameters
 export const detectHandGesture = async (
   model: handpose.HandPose,
   video: HTMLVideoElement
@@ -83,8 +95,8 @@ export const detectHandGesture = async (
       // Get landmarks from the first detected hand
       const landmarks = predictions[0].landmarks;
       
-      // Get gesture estimates
-      const gestureEstimates = gestureEstimator.estimate(landmarks, 8.5); // 8.5 is the confidence threshold
+      // Get gesture estimates with lower confidence threshold for better detection
+      const gestureEstimates = gestureEstimator.estimate(landmarks, 7.5); // Lower threshold from 8.5 to 7.5
       
       if (gestureEstimates.gestures.length > 0) {
         // Get the gesture with highest confidence
@@ -92,10 +104,14 @@ export const detectHandGesture = async (
           return prev.score > curr.score ? prev : curr;
         });
         
+        console.log("Detected gesture:", gesture.name, "with confidence:", gesture.score);
+        
         return {
           gesture: gesture.name,
           landmarks
         };
+      } else {
+        console.log("Hand detected but no matching gesture found");
       }
     }
     
