@@ -42,7 +42,9 @@ const Index = () => {
     const loadModel = async () => {
       if (isCameraActive && !handposeModel) {
         try {
+          console.log("Starting to load handpose model...");
           const model = await loadHandPoseModel();
+          console.log("Model loaded successfully");
           setHandposeModel(model);
           setIsModelLoaded(true);
           toast({
@@ -67,6 +69,7 @@ const Index = () => {
 
   // Toggle camera
   const handleToggleCamera = () => {
+    console.log("Toggle camera clicked, current state:", isCameraActive);
     setIsCameraActive(prev => !prev);
     
     if (isCameraActive) {
@@ -80,6 +83,7 @@ const Index = () => {
 
   // Start game round
   const handleStartGame = () => {
+    console.log("Start game clicked");
     if (!isCameraActive || !isModelLoaded) return;
     
     setIsGameActive(true);
@@ -91,6 +95,7 @@ const Index = () => {
 
   // Stop game
   const handleStopGame = () => {
+    console.log("Stop game clicked");
     setIsGameActive(false);
     setIsCapturingGesture(false);
     setIsCountingDown(false);
@@ -160,8 +165,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen game-container py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen w-full game-container py-8 px-4">
+      <div className="max-w-4xl mx-auto w-full">
         <header className="mb-6 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white mb-2">
             Rock Paper Scissors
@@ -173,7 +178,7 @@ const Index = () => {
           </div>
         </header>
         
-        <main>
+        <main className="w-full">
           {/* Score display */}
           <ScoreBoard score={score} />
           
@@ -185,7 +190,7 @@ const Index = () => {
           />
           
           {/* Webcam with gesture detection */}
-          <div className="relative">
+          <div className="relative w-full max-w-xl mx-auto">
             <Webcam 
               isActive={isCameraActive}
               handposeModel={handposeModel}
@@ -210,7 +215,7 @@ const Index = () => {
             onStopGame={handleStopGame}
           />
           
-          {/* Info message */}
+          {/* Info messages */}
           {isCameraActive && isModelLoaded && !isGameActive && !isCapturingGesture && !isCountingDown && (
             <p className="text-center mt-6 text-white/70">
               Click "Play Game" to start a new round
