@@ -18,6 +18,7 @@ import GameResult from '../components/GameResult';
 import ScoreBoard from '../components/ScoreBoard';
 import Instructions from '../components/Instructions';
 import { useToast } from '@/hooks/use-toast';
+import { CircuitBoard, Sparkles } from 'lucide-react';
 
 const Index = () => {
   // Game state
@@ -48,15 +49,15 @@ const Index = () => {
           setHandposeModel(model);
           setIsModelLoaded(true);
           toast({
-            title: "Model Loaded",
-            description: "Hand detection model is ready!",
+            title: "Neural Network Initialized",
+            description: "Gesture recognition system is now online",
             duration: 3000,
           });
         } catch (error) {
           console.error('Failed to load HandPose model:', error);
           toast({
-            title: "Error",
-            description: "Failed to load hand detection model",
+            title: "System Error",
+            description: "Neural network initialization failed",
             variant: "destructive",
             duration: 5000,
           });
@@ -167,13 +168,24 @@ const Index = () => {
   return (
     <div className="min-h-screen w-full game-container py-8 px-4">
       <div className="max-w-4xl mx-auto w-full">
-        <header className="mb-6 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-2">
-            Rock Paper Scissors
-          </h1>
-          <p className="text-xl text-white/70">Play against AI using hand gestures</p>
+        <header className="mb-8 text-center relative">
+          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-40 h-1 bg-gradient-to-r from-transparent via-game-highlight to-transparent"></div>
           
-          <div className="mt-4">
+          <h1 className="text-5xl font-black tracking-tighter text-white mb-2 relative inline-block mt-4">
+            <span className="absolute -inset-1 blur-lg opacity-50 bg-gradient-to-r from-game-accent via-game-highlight to-game-accent"></span>
+            <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-white via-game-highlight to-white">
+              Neural Combat
+            </span>
+            <Sparkles className="absolute -top-4 -right-8 text-game-highlight h-5 w-5 animate-pulse" />
+          </h1>
+          
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <CircuitBoard className="h-4 w-4 text-game-highlight" />
+            <p className="text-xl text-white/70">Gesture Battle System</p>
+            <CircuitBoard className="h-4 w-4 text-game-highlight" />
+          </div>
+          
+          <div className="mt-6 max-w-xl mx-auto">
             <Instructions />
           </div>
         </header>
@@ -191,13 +203,15 @@ const Index = () => {
           
           {/* Webcam with gesture detection */}
           <div className="relative w-full max-w-xl mx-auto">
-            <Webcam 
-              isActive={isCameraActive}
-              handposeModel={handposeModel}
-              onGestureDetected={handleGestureDetected}
-              isCapturing={isCapturingGesture}
-              isCountingDown={isCountingDown}
-            />
+            <div className="gesture-container p-1 overflow-hidden">
+              <Webcam 
+                isActive={isCameraActive}
+                handposeModel={handposeModel}
+                onGestureDetected={handleGestureDetected}
+                isCapturing={isCapturingGesture}
+                isCountingDown={isCountingDown}
+              />
+            </div>
             
             {/* Countdown overlay */}
             {isCountingDown && (
@@ -217,26 +231,27 @@ const Index = () => {
           
           {/* Info messages */}
           {isCameraActive && isModelLoaded && !isGameActive && !isCapturingGesture && !isCountingDown && (
-            <p className="text-center mt-6 text-white/70">
-              Click "Play Game" to start a new round
+            <p className="text-center mt-6 text-white/70 backdrop-blur-sm py-2 px-4 rounded-md inline-block mx-auto">
+              <span className="text-game-highlight">⟨</span> Select "Initiate Match" to begin <span className="text-game-highlight">⟩</span>
             </p>
           )}
           
           {isCapturingGesture && (
-            <p className="text-center mt-6 text-game-highlight font-bold animate-pulse">
-              Make your gesture now!
+            <p className="text-center mt-6 text-game-highlight font-bold animate-pulse backdrop-blur-sm py-2 px-4 rounded-md inline-block mx-auto">
+              <span className="text-white">⟨</span> Display your gesture now! <span className="text-white">⟩</span>
             </p>
           )}
           
           {!isCameraActive && (
-            <div className="mt-6 p-4 bg-black/40 rounded-lg max-w-lg mx-auto">
-              <h3 className="text-lg font-bold text-white mb-2">Getting Started</h3>
-              <p className="text-white/80 mb-3">
-                To play the game, you need to allow camera access so the app can detect your hand gestures.
+            <div className="mt-8 p-6 bg-black/40 backdrop-blur-sm rounded-lg max-w-lg mx-auto card-holographic">
+              <h3 className="text-xl font-bold text-white mb-3 tech-heading">Neural System Guide</h3>
+              <p className="text-white/80 mb-3 leading-relaxed">
+                To engage in neural combat, you must activate the visual scanner to enable gesture recognition.
               </p>
-              <p className="text-white/80">
-                Click "Turn On Camera" above to start, then follow the instructions to play.
+              <p className="text-white/80 mb-3 leading-relaxed">
+                Click "Activate Scanner" above to initialize systems and begin your combat training.
               </p>
+              <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-game-accent/30 to-transparent mt-4"></div>
             </div>
           )}
         </main>

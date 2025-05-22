@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -79,6 +73,7 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -99,8 +94,11 @@
     @apply bg-game-bg text-foreground min-h-screen;
   }
 
+  /* Enhanced futuristic game container with animated background */
   .game-container {
-    background: linear-gradient(to bottom right, rgba(109, 40, 217, 0.1), rgba(6, 182, 212, 0.1));
+    background: radial-gradient(circle at top right, rgba(109, 40, 217, 0.4), transparent 60%),
+                radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.4), transparent 60%),
+                linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(12, 18, 32, 0.98));
     min-height: 100vh;
     width: 100%;
     display: flex;
@@ -108,43 +106,266 @@
     justify-content: flex-start;
     align-items: center;
     padding: 1rem;
+    position: relative;
+    overflow: hidden;
   }
 
+  /* Particle overlay effect */
+  .game-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: particleFloat 120s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes particleFloat {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 200px 200px;
+    }
+  }
+
+  /* Cyberpunk-inspired gesture container with glowing border */
   .gesture-container {
     border: 2px solid transparent;
     background-clip: padding-box;
-    background-image: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)), 
-                      linear-gradient(to right, #6D28D9, #06B6D4);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: 
+      0 0 20px rgba(109, 40, 217, 0.3),
+      inset 0 0 30px rgba(6, 182, 212, 0.1);
+    position: relative;
+    z-index: 1;
+    border-radius: 12px;
   }
 
-  @keyframes neon-border {
-    0% {
-      box-shadow: 0 0 5px #6D28D9, 0 0 10px #6D28D9;
+  .gesture-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #6D28D9, #06B6D4, #6D28D9);
+    border-radius: 12px;
+    z-index: -1;
+    animation: borderGlow 3s ease infinite;
+    opacity: 0.8;
+  }
+
+  @keyframes borderGlow {
+    0%, 100% {
+      opacity: 0.8;
     }
     50% {
-      box-shadow: 0 0 10px #06B6D4, 0 0 20px #06B6D4;
+      opacity: 0.4;
+    }
+  }
+
+  /* Enhanced neon border animation */
+  @keyframes neon-border {
+    0% {
+      box-shadow: 0 0 5px #6D28D9, 0 0 15px #6D28D9, 0 0 30px rgba(109, 40, 217, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 10px #06B6D4, 0 0 20px #06B6D4, 0 0 40px rgba(6, 182, 212, 0.5);
     }
     100% {
-      box-shadow: 0 0 5px #6D28D9, 0 0 10px #6D28D9;
+      box-shadow: 0 0 5px #6D28D9, 0 0 15px #6D28D9, 0 0 30px rgba(109, 40, 217, 0.3);
     }
   }
 
   .neon-border {
-    animation: neon-border 2s ease-in-out infinite;
+    animation: neon-border 3s ease-in-out infinite;
   }
 
+  /* Enhanced countdown text with cyber glow */
   .countdown-text {
-    text-shadow: 0 0 10px #6D28D9, 0 0 20px #6D28D9;
+    text-shadow: 
+      0 0 10px #6D28D9,
+      0 0 20px #6D28D9,
+      0 0 40px rgba(109, 40, 217, 0.7);
+    font-weight: 800;
+    letter-spacing: 2px;
   }
 
+  /* Enhanced gesture label with 3D text effect */
   .gesture-label {
     background: linear-gradient(90deg, #6D28D9, #06B6D4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    position: relative;
+  }
+
+  .gesture-label::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, #6D28D9, #06B6D4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.3;
+    filter: blur(4px);
+  }
+
+  /* Enhanced button glow effect */
+  .btn-primary-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary-glow::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #6D28D9, #06B6D4);
+    z-index: -1;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   .btn-primary-glow:hover {
-    box-shadow: 0 0 15px rgba(109, 40, 217, 0.7);
+    box-shadow: 0 0 20px rgba(109, 40, 217, 0.7);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary-glow:hover::before {
+    opacity: 0.3;
+  }
+
+  /* Card with holographic effect */
+  .card-holographic {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(109, 40, 217, 0.3);
+    box-shadow: 0 8px 32px rgba(6, 182, 212, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-holographic::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(109, 40, 217, 0.1),
+      rgba(6, 182, 212, 0.1),
+      transparent
+    );
+    transform: rotate(30deg);
+    animation: holographicShift 6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes holographicShift {
+    0% {
+      transform: translateX(-50%) translateY(-50%) rotate(0deg);
+    }
+    100% {
+      transform: translateX(-50%) translateY(-50%) rotate(360deg);
+    }
+  }
+
+  /* Cyber-panel scoring UI */
+  .cyber-panel {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    border: 1px solid rgba(109, 40, 217, 0.3);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 0 8px rgba(6, 182, 212, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .cyber-panel:hover {
+    box-shadow: 
+      0 4px 20px rgba(6, 182, 212, 0.4),
+      inset 0 0 12px rgba(6, 182, 212, 0.3);
+  }
+  
+  .cyber-panel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.8), transparent);
+    opacity: 0.8;
+  }
+
+  /* Animated heading with tech scan line effect */
+  .tech-heading {
+    position: relative;
+    overflow: hidden;
+    padding: 4px 0;
+  }
+
+  .tech-heading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      rgba(6, 182, 212, 0) 20%,
+      rgba(6, 182, 212, 0.4) 50%,
+      rgba(6, 182, 212, 0) 80%,
+      transparent 100%
+    );
+    animation: scanLine 3s infinite;
+  }
+
+  @keyframes scanLine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  /* Futuristic spinner */
+  .cyber-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid transparent;
+    border-top-color: #6D28D9;
+    border-left-color: #06B6D4;
+    border-radius: 50%;
+    animation: cyberSpin 1s linear infinite;
+  }
+
+  @keyframes cyberSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 }
