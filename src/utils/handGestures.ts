@@ -1,4 +1,3 @@
-
 import * as tf from '@tensorflow/tfjs';
 import * as handpose from '@tensorflow-models/handpose';
 import * as fp from 'fingerpose';
@@ -36,8 +35,7 @@ scissorsGesture.addCurl(fp.Finger.Pinky, fp.FingerCurl.FullCurl, 1.0);
 scissorsGesture.addDirection(fp.Finger.Index, fp.FingerDirection.VerticalUp, 0.7);
 scissorsGesture.addDirection(fp.Finger.Middle, fp.FingerDirection.VerticalUp, 0.7);
 
-// Small angles between index and middle fingers are preferred for scissors
-scissorsGesture.addAngle(fp.Finger.Index, fp.Finger.Middle, 0, 0.9);
+// Remove the problematic addAngle line that's causing the error
 
 // Initialize the gesture estimator
 export const gestureEstimator = new fp.GestureEstimator([
