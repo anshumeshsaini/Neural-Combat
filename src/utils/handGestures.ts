@@ -56,7 +56,7 @@ export const loadHandPoseModel = async () => {
 export const detectHandGesture = async (
   model: handpose.HandPose,
   video: HTMLVideoElement
-): Promise<{ gesture: string | null; landmarks: handpose.Keypoint[][] | null }> => {
+): Promise<{ gesture: string | null; landmarks: handpose.Keypoint[] | null }> => {
   try {
     // Detect hand in the video frame
     const predictions = await model.estimateHands(video);

@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { HandPose } from '@tensorflow-models/handpose';
 import { drawHandLandmarks, detectHandGesture } from '../utils/handGestures';
@@ -107,7 +106,7 @@ const Webcam: React.FC<WebcamProps> = ({
         if (ctx) {
           ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
           if (landmarks) {
-            drawHandLandmarks(ctx, landmarks as any, gesture);
+            drawHandLandmarks(ctx, landmarks, gesture);
           }
         }
         
