@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { HandPose } from '@tensorflow-models/handpose';
 import { drawHandLandmarks, detectHandGesture } from '../utils/handGestures';
@@ -23,10 +24,12 @@ const Webcam: React.FC<WebcamProps> = ({
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [currentGesture, setCurrentGesture] = useState<string | null>(null);
+  const [cameraReady, setCameraReady] = useState(false);
   
   // Request camera access
   const startCamera = async () => {
     try {
+      console.log('Starting camera...');
       const constraints = {
         video: {
           width: { ideal: 640 },
@@ -40,26 +43,52 @@ const Webcam: React.FC<WebcamProps> = ({
       
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        await videoRef.current.play();
+        videoRef.current.onloadedmetadata = () => {
+          console.log('Video metadata loaded, playing video...');
+          if (videoRef.current) {
+            videoRef.current.play()
+              .then(() => {
+                console.log('Camera started successfully');
+                setCameraReady(true);
+                setError(null);
+                
+                // Update canvas dimensions
+                if (canvasRef.current && videoRef.current) {
+                  canvasRef.current.width = videoRef.current.videoWidth;
+                  canvasRef.current.height = videoRef.current.videoHeight;
+                }
+              })
+              .catch(err => {
+                console.error('Error playing video:', err);
+                setError('Could not start video playback. Please refresh and try again.');
+              });
+          }
+        };
       }
-      
-      setError(null);
     } catch (err) {
       console.error('Error accessing camera:', err);
-      setError('Could not access your camera. Please check permissions.');
+      setError('Could not access your camera. Please check permissions and try again.');
+      setCameraReady(false);
     }
   };
 
   // Stop camera
   const stopCamera = () => {
+    setCameraReady(false);
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      console.log('Stopping camera...');
+      stream.getTracks().forEach(track => {
+        track.stop();
+        console.log('Camera track stopped');
+      });
       setStream(null);
     }
     
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
+    
+    setCurrentGesture(null);
   };
 
   // Effect for handling camera activation/deactivation
@@ -77,40 +106,54 @@ const Webcam: React.FC<WebcamProps> = ({
 
   // Effect for hand gesture detection loop
   useEffect(() => {
-    if (!isActive || !handposeModel || !videoRef.current || !canvasRef.current) return;
+    if (!isActive || !handposeModel || !videoRef.current || !canvasRef.current || !cameraReady) {
+      return;
+    }
+    
+    console.log('Starting hand detection loop with model:', handposeModel ? 'loaded' : 'not loaded');
     
     let animationFrameId: number;
     let lastCaptureTime = 0;
     const captureInterval = 200; // Detect gestures every 200ms
     
     const detectHands = async (timestamp: number) => {
-      if (!videoRef.current || !canvasRef.current || !handposeModel) return;
+      if (!videoRef.current || !canvasRef.current || !handposeModel || !cameraReady) return;
       
-      // Check if enough time has passed since last detection
-      if (timestamp - lastCaptureTime > captureInterval) {
-        const { gesture, landmarks } = await detectHandGesture(handposeModel, videoRef.current);
-        
-        if (gesture) {
-          setCurrentGesture(gesture);
-          
-          // Notify parent component about the detected gesture if we're in capturing mode
-          if (isCapturing && !isCountingDown) {
-            onGestureDetected(gesture as Choice);
+      try {
+        // Check if enough time has passed since last detection
+        if (timestamp - lastCaptureTime > captureInterval) {
+          // Clear the canvas first
+          const ctx = canvasRef.current.getContext('2d');
+          if (ctx) {
+            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
           }
-        } else {
-          setCurrentGesture(null);
-        }
-        
-        // Draw hand landmarks
-        const ctx = canvasRef.current.getContext('2d');
-        if (ctx) {
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-          if (landmarks) {
+          
+          const { gesture, landmarks } = await detectHandGesture(handposeModel, videoRef.current);
+          
+          if (gesture) {
+            console.log('Detected gesture:', gesture);
+            setCurrentGesture(gesture);
+            
+            // Notify parent component about the detected gesture if we're in capturing mode
+            if (isCapturing && !isCountingDown) {
+              onGestureDetected(gesture as Choice);
+            }
+          } else {
+            // Don't clear current gesture immediately to avoid flickering
+            if (timestamp - lastCaptureTime > 1000) {
+              setCurrentGesture(null);
+            }
+          }
+          
+          // Draw hand landmarks
+          if (landmarks && ctx) {
             drawHandLandmarks(ctx, landmarks, gesture);
           }
+          
+          lastCaptureTime = timestamp;
         }
-        
-        lastCaptureTime = timestamp;
+      } catch (error) {
+        console.error('Error in hand detection loop:', error);
       }
       
       // Continue the detection loop
@@ -123,30 +166,10 @@ const Webcam: React.FC<WebcamProps> = ({
     return () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
+        console.log('Hand detection loop stopped');
       }
     };
-  }, [isActive, handposeModel, isCapturing, isCountingDown, onGestureDetected]);
-
-  // Update canvas dimensions when video dimensions change
-  useEffect(() => {
-    const handleResize = () => {
-      if (videoRef.current && canvasRef.current) {
-        canvasRef.current.width = videoRef.current.videoWidth;
-        canvasRef.current.height = videoRef.current.videoHeight;
-      }
-    };
-
-    const video = videoRef.current;
-    if (video) {
-      video.addEventListener('loadedmetadata', handleResize);
-    }
-
-    return () => {
-      if (video) {
-        video.removeEventListener('loadedmetadata', handleResize);
-      }
-    };
-  }, []);
+  }, [isActive, handposeModel, isCapturing, isCountingDown, onGestureDetected, cameraReady]);
 
   return (
     <div className="relative w-full max-w-lg mx-auto mb-4">

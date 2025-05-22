@@ -44,10 +44,30 @@ export const gestureEstimator = new fp.GestureEstimator([
   scissorsGesture
 ]);
 
+// Initialize TensorFlow.js with the WebGL backend
+const initializeTensorFlow = async () => {
+  console.log('Initializing TensorFlow.js...');
+  // Register and initialize the WebGL backend
+  await tf.setBackend('webgl');
+  await tf.ready();
+  console.log('TensorFlow backend initialized:', tf.getBackend());
+};
+
 // Load the handpose model
 export const loadHandPoseModel = async () => {
-  console.log('Loading HandPose model...');
-  return await handpose.load();
+  console.log('Starting TensorFlow initialization...');
+  try {
+    // First initialize TensorFlow.js
+    await initializeTensorFlow();
+    
+    console.log('Loading HandPose model...');
+    const model = await handpose.load();
+    console.log('HandPose model loaded successfully');
+    return model;
+  } catch (error) {
+    console.error('Error initializing or loading model:', error);
+    throw error;
+  }
 };
 
 // Detect and analyze hand gestures
