@@ -9,7 +9,7 @@ import {
   DialogDescription
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { HandScissors, HandPaper, HandMetal } from 'lucide-react';
+import { Scissors, PanelLeft, GripHorizontal } from 'lucide-react';
 
 const Instructions: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,17 +55,17 @@ const Instructions: React.FC = () => {
             <h3 className="text-lg font-medium mb-2 text-game-accent">Hand Gestures</h3>
             <div className="flex flex-col sm:flex-row justify-around gap-4 mt-3">
               <div className="flex flex-col items-center text-center">
-                <HandMetal className="h-12 w-12 text-game-accent mb-2" />
+                <GripHorizontal className="h-12 w-12 text-game-accent mb-2" />
                 <p className="font-bold">Rock</p>
                 <p className="text-sm text-white/70">Make a fist with your hand</p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <HandPaper className="h-12 w-12 text-game-accent mb-2" />
+                <PanelLeft className="h-12 w-12 text-game-accent mb-2" />
                 <p className="font-bold">Paper</p>
                 <p className="text-sm text-white/70">Open your hand with fingers extended</p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <HandScissors className="h-12 w-12 text-game-accent mb-2" />
+                <Scissors className="h-12 w-12 text-game-accent mb-2" />
                 <p className="font-bold">Scissors</p>
                 <p className="text-sm text-white/70">Extend index and middle fingers</p>
               </div>

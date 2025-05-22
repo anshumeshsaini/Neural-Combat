@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Play, Stop, Timer } from 'lucide-react';
+import { Play, Square, Timer } from 'lucide-react';
 
 interface GameControlsProps {
   isCameraActive: boolean;
@@ -46,7 +46,7 @@ const GameControls: React.FC<GameControlsProps> = ({
           variant="destructive"
           className="btn-primary-glow"
         >
-          <Stop className="mr-2 h-4 w-4" /> Stop Game
+          <Square className="mr-2 h-4 w-4" /> Stop Game
         </Button>
       )}
 
