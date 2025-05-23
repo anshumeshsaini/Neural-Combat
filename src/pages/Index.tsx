@@ -249,14 +249,9 @@ const Index = () => {
           
           {!isCameraActive && (
             <div className="mt-6 md:mt-8 p-4 md:p-6 bg-black/40 backdrop-blur-sm rounded-lg max-w-lg mx-auto card-holographic">
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 tech-heading">Neural System Guide</h3>
-              <p className="text-sm md:text-base text-white/80 mb-2 md:mb-3 leading-relaxed">
-                To engage in neural combat, you must activate the visual scanner to enable gesture recognition.
-              </p>
-              <p className="text-sm md:text-base text-white/80 mb-2 md:mb-3 leading-relaxed">
-                Click "Activate Scanner" above to initialize systems and begin your combat training.
-              </p>
-              <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-game-accent/30 to-transparent mt-3 md:mt-4"></div>
+
+              
+
             </div>
           )}
         </main>
