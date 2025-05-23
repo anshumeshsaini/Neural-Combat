@@ -1,73 +1,128 @@
-# Welcome to your Lovable project
+# Rock Paper Scissors with Gestures 👋✊✌️
 
-## Project info
+A browser-based game that uses your webcam and TensorFlow.js to play Rock Paper Scissors with hand gestures.
 
-**URL**: https://lovable.dev/projects/65f7fc04-7868-4e3b-8fed-a459418c00c6
+![Game Screenshot](screenshot.png) *(optional: add screenshot later)*
 
-## How can I edit this code?
+## Features ✨
 
-There are several ways of editing your application.
+- 🎥 Real-time webcam gesture recognition
+- 🤖 AI opponent with random moves
+- ✊✋✌️ Detects Rock, Paper, and Scissors gestures
+- 📊 Tracks wins, losses, and ties
+- ⚡ Pure client-side - no backend required
+- 📱 Responsive design works on desktop and mobile
 
-**Use Lovable**
+## How It Works 🛠️
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/65f7fc04-7868-4e3b-8fed-a459418c00c6) and start prompting.
+1. Uses TensorFlow.js with HandPose or PoseNet model
+2. Analyzes hand positions from webcam feed
+3. Classifies gestures into Rock/Paper/Scissors
+4. Compares against AI's move
+5. Updates score and displays results
 
-Changes made via Lovable will be committed automatically to this repo.
+## Setup and Installation 🚀
 
-**Use your preferred IDE**
+No installation needed! Just open `index.html` in a modern browser.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### For Development:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/anshumeshsaini/Neural-Combat.git
 
-Follow these steps:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   Open index.html in your browser
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Grant camera permissions when prompted
 
-# Step 3: Install the necessary dependencies.
-npm i
+Requirements:
+Modern browser (Chrome, Firefox, Edge) with WebGL support
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Webcam
 
-**Edit a file directly in GitHub**
+Internet connection (to load TensorFlow.js models)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+How to Play 🎮
+Click "Start Camera" and allow camera access
 
-**Use GitHub Codespaces**
+Wait for the model to load (may take a moment)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+When prompted, show your gesture:
 
-## What technologies are used for this project?
+✊ Rock: Closed fist
 
-This project is built with:
+✋ Paper: Open hand
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+✌️ Scissors: Victory sign (two fingers)
 
-## How can I deploy this project?
+The AI will make its move
 
-Simply open [Lovable](https://lovable.dev/projects/65f7fc04-7868-4e3b-8fed-a459418c00c6) and click on Share -> Publish.
+See who wins and track your score!
 
-## Can I connect a custom domain to my Lovable project?
+Click "Play Again" for another round
 
-Yes, you can!
+File Structure 📂
+/
+├── src    # Main application file
+├── index.css   # Stylesheet
+├── index.tsx         # Main game logic
+├── ui/component            # (Optional) Folder for images/icons
+├── README.md           # This file
+Technologies Used 💻
+TensorFlow.js
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+HandPose or PoseNet model
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Vanilla JavaScript
+
+Webcam api
+
+CSS3 for styling
+
+Troubleshooting 🛠️
+Camera not working:
+
+Ensure you've granted camera permissions
+
+Check if another app is using your camera
+
+Try refreshing the page
+
+Model not loading:
+
+Check your internet connection
+
+Try a different browser
+
+Clear cache and reload
+
+Gesture not recognized:
+
+Make sure your hand is well-lit and visible
+
+Try moving closer to/farther from camera
+
+Hold your gesture clearly and steadily
+
+Future Improvements 🔮
+Add more gesture variations
+
+Implement game history
+
+Add difficulty levels for AI
+
+Multiplayer mode via WebRTC
+
+Offline model caching
+
+Contributing 🤝
+Contributions are welcome! Please open an issue or pull request.
+
+License 📄
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+
+
+
