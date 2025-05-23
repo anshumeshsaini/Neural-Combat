@@ -40,15 +40,15 @@ const GameResult: React.FC<GameResultProps> = ({ playerChoice, computerChoice, r
               </div>
               <div className="absolute -inset-4 bg-gradient-to-r from-game-accent/0 via-game-accent/10 to-game-accent/0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <p className="text-white/70 text-sm">Your Choice</p>
-            <p className="text-lg font-bold text-white capitalize bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+            <p className="text-black text-sm">Your Choice</p>
+            <p className="text-lg font-bold text-black capitalize bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
               {playerChoice}
             </p>
           </div>
           
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 rounded-full bg-black/30 flex items-center justify-center border border-white/10">
-              <div className="text-gray-400 font-bold text-xl">VS</div>
+              <div className="text-black font-bold text-xl">VS</div>
             </div>
             <div className="mt-2 w-0.5 h-6 bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
           </div>
@@ -60,8 +60,8 @@ const GameResult: React.FC<GameResultProps> = ({ playerChoice, computerChoice, r
               </div>
               <div className="absolute -inset-4 bg-gradient-to-r from-game-highlight/0 via-game-highlight/10 to-game-highlight/0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <p className="text-white/70 text-sm">AI Choice</p>
-            <p className="text-lg font-bold text-white capitalize bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+            <p className="text-black text-sm">AI Choice</p>
+            <p className="text-lg font-bold text-black capitalize bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
               {computerChoice}
             </p>
           </div>

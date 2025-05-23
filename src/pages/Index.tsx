@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HandPose } from '@tensorflow-models/handpose';
 import { loadHandPoseModel } from '../utils/handGestures';
@@ -166,12 +165,12 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen w-full game-container py-8 px-4">
+    <div className="min-h-screen w-full game-container py-4 md:py-8 px-4">
       <div className="max-w-4xl mx-auto w-full">
-        <header className="mb-8 text-center relative">
+        <header className="mb-6 md:mb-8 text-center relative">
           <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-40 h-1 bg-gradient-to-r from-transparent via-game-highlight to-transparent"></div>
           
-          <h1 className="text-5xl font-black tracking-tighter text-white mb-2 relative inline-block mt-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white mb-2 relative inline-block mt-4">
             <span className="absolute -inset-1 blur-lg opacity-50 bg-gradient-to-r from-game-accent via-game-highlight to-game-accent"></span>
             <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-white via-game-highlight to-white">
               Neural Combat
@@ -181,28 +180,32 @@ const Index = () => {
           
           <div className="flex items-center justify-center gap-2 mt-2">
             <CircuitBoard className="h-4 w-4 text-game-highlight" />
-            <p className="text-xl text-white/70">Gesture Battle System</p>
+            <p className="text-base sm:text-lg md:text-xl text-white/70">Gesture Battle System</p>
             <CircuitBoard className="h-4 w-4 text-game-highlight" />
           </div>
           
-          <div className="mt-6 max-w-xl mx-auto">
+          <div className="mt-4 md:mt-6 max-w-xl mx-auto">
             <Instructions />
           </div>
         </header>
         
-        <main className="w-full">
+        <main className="w-full space-y-4 md:space-y-6">
           {/* Score display */}
-          <ScoreBoard score={score} />
+          <div className="px-4 md:px-0">
+            <ScoreBoard score={score} />
+          </div>
           
           {/* Game result */}
-          <GameResult 
-            playerChoice={playerChoice}
-            computerChoice={computerChoice}
-            result={gameResult}
-          />
+          <div className="px-4 md:px-0">
+            <GameResult 
+              playerChoice={playerChoice}
+              computerChoice={computerChoice}
+              result={gameResult}
+            />
+          </div>
           
           {/* Webcam with gesture detection */}
-          <div className="relative w-full max-w-xl mx-auto">
+          <div className="relative w-full max-w-xl mx-auto px-4 md:px-0">
             <div className="gesture-container p-1 overflow-hidden">
               <Webcam 
                 isActive={isCameraActive}
@@ -220,38 +223,40 @@ const Index = () => {
           </div>
           
           {/* Game controls */}
-          <GameControls 
-            isCameraActive={isCameraActive}
-            isModelLoaded={isModelLoaded}
-            isPlaying={isGameActive || isCapturingGesture || isCountingDown}
-            onToggleCamera={handleToggleCamera}
-            onStartGame={handleStartGame}
-            onStopGame={handleStopGame}
-          />
+          <div className="px-4 md:px-0">
+            <GameControls 
+              isCameraActive={isCameraActive}
+              isModelLoaded={isModelLoaded}
+              isPlaying={isGameActive || isCapturingGesture || isCountingDown}
+              onToggleCamera={handleToggleCamera}
+              onStartGame={handleStartGame}
+              onStopGame={handleStopGame}
+            />
+          </div>
           
           {/* Info messages */}
           {isCameraActive && isModelLoaded && !isGameActive && !isCapturingGesture && !isCountingDown && (
-            <p className="text-center mt-6 text-white/70 backdrop-blur-sm py-2 px-4 rounded-md inline-block mx-auto">
+            <p className="text-center mt-4 md:mt-6 text-sm md:text-base text-white/70 backdrop-blur-sm py-2 px-4 rounded-md inline-block mx-auto">
               <span className="text-game-highlight">⟨</span> Select "Initiate Match" to begin <span className="text-game-highlight">⟩</span>
             </p>
           )}
           
           {isCapturingGesture && (
-            <p className="text-center mt-6 text-game-highlight font-bold animate-pulse backdrop-blur-sm py-2 px-4 rounded-md inline-block mx-auto">
+            <p className="text-center mt-4 md:mt-6 text-sm md:text-base text-game-highlight font-bold animate-pulse backdrop-blur-sm py-2 px-4 rounded-md inline-block mx-auto">
               <span className="text-white">⟨</span> Display your gesture now! <span className="text-white">⟩</span>
             </p>
           )}
           
           {!isCameraActive && (
-            <div className="mt-8 p-6 bg-black/40 backdrop-blur-sm rounded-lg max-w-lg mx-auto card-holographic">
-              <h3 className="text-xl font-bold text-white mb-3 tech-heading">Neural System Guide</h3>
-              <p className="text-white/80 mb-3 leading-relaxed">
+            <div className="mt-6 md:mt-8 p-4 md:p-6 bg-black/40 backdrop-blur-sm rounded-lg max-w-lg mx-auto card-holographic">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 tech-heading">Neural System Guide</h3>
+              <p className="text-sm md:text-base text-white/80 mb-2 md:mb-3 leading-relaxed">
                 To engage in neural combat, you must activate the visual scanner to enable gesture recognition.
               </p>
-              <p className="text-white/80 mb-3 leading-relaxed">
+              <p className="text-sm md:text-base text-white/80 mb-2 md:mb-3 leading-relaxed">
                 Click "Activate Scanner" above to initialize systems and begin your combat training.
               </p>
-              <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-game-accent/30 to-transparent mt-4"></div>
+              <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-game-accent/30 to-transparent mt-3 md:mt-4"></div>
             </div>
           )}
         </main>
